@@ -1,3 +1,20 @@
+CREATE TABLE businessCodes (
+    businessCode varchar(255) PRIMARY KEY,
+    name varchar(255) UNIQUE NOT NULL,
+    description varchar(255)
+);
+
+CREATE TABLE subOrganizations (
+    orgNr int PRIMARY KEY,
+    name varchar(255),
+    address varchar(255),
+    municipality varchar(255),
+    businessCode varchar(255),
+    registeredNotes varchar(255),
+    FOREIGN KEY (businessCode)
+        REFERENCES businessCodes (businessCode)
+);
+
 CREATE TABLE organizations (
     orgNr int PRIMARY KEY,
     name varchar(255),
@@ -22,24 +39,7 @@ CREATE TABLE organizations (
     accountant varchar(255),
     subOrganization int,
     FOREIGN KEY (subOrganization)
-        REFERENCES subOrganizatios (orgNr),
+        REFERENCES subOrganizations (orgNr),
     FOREIGN KEY (businessCode)
         REFERENCES businessCodes (businessCode)
-);
-
-CREATE TABLE organizations (
-    orgNr int PRIMARY KEY,
-    name varchar(255),
-    address varchar(255),
-    municipality varchar(255),
-    businessCode varchar(255),
-    registeredNotes varchar(255),
-    FOREIGN KEY (businessCode)
-        REFERENCES businessCodes (businessCode)
-);
-
-CREATE TABLE businessCodes (
-    businessCode varchar(255) PRIMARY KEY,
-    name varchar(255) UNIQUE NOT NULL,
-    description varchar(255)
 );
