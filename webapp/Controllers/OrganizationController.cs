@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using webapp.Models;
 
 namespace webapp.Controllers
 {
@@ -14,5 +17,15 @@ namespace webapp.Controllers
         {
             _logger = logger;
         }
+        
+        [HttpGet]
+        public IEnumerable<Organization> Get()
+        {
+            using (var db = new WebAppDbContext())
+            {
+                return db.Organizations.ToList();
+            }
+        }
+
     }
 }

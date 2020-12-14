@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -7,6 +8,7 @@ namespace webapp.Models
 {
     public partial class Organization
     {
+        [Key]
         public int Orgnr { get; set; }
         public string Name { get; set; }
         public string Orgtype { get; set; }

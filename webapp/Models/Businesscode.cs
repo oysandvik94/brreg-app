@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -13,6 +14,7 @@ namespace webapp.Models
             Suborganizations = new HashSet<Suborganization>();
         }
 
+        [Key]
         public string Businesscode1 { get; set; }
         public string Name { get; set; }
 
