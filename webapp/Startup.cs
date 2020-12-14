@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using webapp.Context;
+using webapp.Models;
 
 namespace webapp
 {
@@ -28,8 +28,8 @@ namespace webapp
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
             
             // Add EF and Postgres services
-            services.AddEntityFrameworkNpgsql().AddDbContext<WebContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("WebContext")));
+            services.AddEntityFrameworkNpgsql().AddDbContext<WebAppDbContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("WebAppDbContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
