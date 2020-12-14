@@ -53,19 +53,20 @@ namespace webapp
                 app.UseHsts();
             }
 
+               
+            // Enable Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "brreg API V1");
+            });
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
 
-            /*app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-            });*/
-            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -79,13 +80,6 @@ namespace webapp
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
-            });
-            
-            // Enable Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "brreg API V1");
             });
         }
     }
