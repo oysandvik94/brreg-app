@@ -254,6 +254,8 @@ _Pvt_Extensions
 **/.idea/**/contentModel.xml
 **/.idea/**/modules.xml
 
+.idea/
+
 *.suo
 *.user
 .vs/
