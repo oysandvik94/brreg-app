@@ -17,11 +17,11 @@ namespace webapp.Models
         {
         }
 
-        public virtual DbSet<Businesscode> Businesscodes { get; set; }
-        public virtual DbSet<BusinesscodeOrg> BusinesscodeOrgs { get; set; }
-        public virtual DbSet<BusinesscodeSuborg> BusinesscodeSuborgs { get; set; }
-        public virtual DbSet<Organization> Organizations { get; set; }
-        public virtual DbSet<Suborganization> Suborganizations { get; set; }
+        public virtual DbSet<BusinesscodeOrg> BusinesscodeOrg { get; set; }
+        public virtual DbSet<BusinesscodeSuborg> BusinesscodeSuborg { get; set; }
+        public virtual DbSet<Businesscodes> Businesscodes { get; set; }
+        public virtual DbSet<Organizations> Organizations { get; set; }
+        public virtual DbSet<Suborganizations> Suborganizations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -36,25 +36,19 @@ namespace webapp.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "en_US.utf8");
 
-            modelBuilder.Entity<Businesscode>(entity =>
-            {
-                entity.HasKey(e => e.Businesscode1)
-                    .HasName("businesscodes_pkey");
-            });
-
             modelBuilder.Entity<BusinesscodeOrg>(entity =>
             {
                 entity.HasKey(e => new { e.Businesscode, e.Orgnr })
                     .HasName("businesscode_org_pkey");
 
                 entity.HasOne(d => d.BusinesscodeNavigation)
-                    .WithMany(p => p.BusinesscodeOrgs)
+                    .WithMany(p => p.BusinesscodeOrg)
                     .HasForeignKey(d => d.Businesscode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("businesscode_org_businesscode_fkey");
 
                 entity.HasOne(d => d.OrgnrNavigation)
-                    .WithMany(p => p.BusinesscodeOrgs)
+                    .WithMany(p => p.BusinesscodeOrg)
                     .HasForeignKey(d => d.Orgnr)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("businesscode_org_orgnr_fkey");
@@ -66,19 +60,25 @@ namespace webapp.Models
                     .HasName("businesscode_suborg_pkey");
 
                 entity.HasOne(d => d.BusinesscodeNavigation)
-                    .WithMany(p => p.BusinesscodeSuborgs)
+                    .WithMany(p => p.BusinesscodeSuborg)
                     .HasForeignKey(d => d.Businesscode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("businesscode_suborg_businesscode_fkey");
 
                 entity.HasOne(d => d.SuborgnrNavigation)
-                    .WithMany(p => p.BusinesscodeSuborgs)
+                    .WithMany(p => p.BusinesscodeSuborg)
                     .HasForeignKey(d => d.Suborgnr)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("businesscode_suborg_suborgnr_fkey");
             });
 
-            modelBuilder.Entity<Organization>(entity =>
+            modelBuilder.Entity<Businesscodes>(entity =>
+            {
+                entity.HasKey(e => e.Businesscode)
+                    .HasName("businesscodes_pkey");
+            });
+
+            modelBuilder.Entity<Organizations>(entity =>
             {
                 entity.HasKey(e => e.Orgnr)
                     .HasName("organizations_pkey");
@@ -86,7 +86,7 @@ namespace webapp.Models
                 entity.Property(e => e.Orgnr).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<Suborganization>(entity =>
+            modelBuilder.Entity<Suborganizations>(entity =>
             {
                 entity.HasKey(e => e.Suborgnr)
                     .HasName("suborganizations_pkey");

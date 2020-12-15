@@ -8,17 +8,17 @@ namespace webapp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BusinesscodeController : ControllerBase
+    public class BusinesscodesController : ControllerBase
     {
-        private readonly ILogger<BusinesscodeController> _logger;
+        private readonly ILogger<BusinesscodesController> _logger;
 
-        public BusinesscodeController(ILogger<BusinesscodeController> logger)
+        public BusinesscodesController(ILogger<BusinesscodesController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<Businesscode> Get()
+        public IEnumerable<Businesscodes> Get()
         {
             _logger.LogDebug("Getting all businessCodes");
             
@@ -28,13 +28,13 @@ namespace webapp.Controllers
         }
         
         [HttpGet("{busCode}")]
-        public IEnumerable<Businesscode> Get(string busCode)
+        public IEnumerable<Businesscodes> Get(string busCode)
         {
             _logger.LogDebug($"Getting businessCode for id: {busCode}");
             
             var db = new WebAppDbContext();
             return db.Businesscodes
-                .Where(busCode => busCode.Businesscode1.Equals(busCode));
+                .Where(busCode => busCode.Businesscode.Equals(busCode));
         }
     }
 }

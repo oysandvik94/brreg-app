@@ -10,35 +10,35 @@ namespace webapp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class OrganizationController : ControllerBase
+    public class OrganizationsController : ControllerBase
     {
-        private readonly ILogger<OrganizationController> _logger;
+        private readonly ILogger<OrganizationsController> _logger;
 
-        public OrganizationController(ILogger<OrganizationController> logger)
+        public OrganizationsController(ILogger<OrganizationsController> logger)
         {
             _logger = logger;
         }
         
         [HttpGet]
-        public IEnumerable<Organization> Get()
+        public IEnumerable<Organizations> Get()
         {
             _logger.LogDebug("Getting all organizations");
             
             var db = new WebAppDbContext();
             return db.Organizations
-                .Include(org => org.BusinesscodeOrgs)
+                .Include(org => org.BusinesscodeOrg)
                 .ToList(); ;
         }
         
         [HttpGet("{orgNr:int}")]
-        public IEnumerable<Organization> Get(int orgNr)
+        public IEnumerable<Organizations> Get(int orgNr)
         {
             _logger.LogDebug($"Getting organization for id {orgNr}");
             
             var db = new WebAppDbContext();
             return db.Organizations
                 .Where(org => org.Orgnr == orgNr)
-                .Include(org => org.BusinesscodeOrgs)
+                .Include(org => org.BusinesscodeOrg)
                 .ToList();
         }
     }

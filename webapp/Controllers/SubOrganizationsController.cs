@@ -9,17 +9,17 @@ namespace webapp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SubOrganizationController
+    public class SubOrganizationsController
     {
-        private readonly ILogger<SubOrganizationController> _logger;
+        private readonly ILogger<SubOrganizationsController> _logger;
 
-        public SubOrganizationController(ILogger<SubOrganizationController> logger)
+        public SubOrganizationsController(ILogger<SubOrganizationsController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<Suborganization> Get()
+        public IEnumerable<Suborganizations> Get()
         {
             _logger.LogDebug("Getting all subOrganizations");
 
@@ -29,14 +29,14 @@ namespace webapp.Controllers
         }
         
         [HttpGet("{subOrgNr:int}")]
-        public IEnumerable<Suborganization> Get(int subOrgNr)
+        public IEnumerable<Suborganizations> Get(int subOrgNr)
         {
             _logger.LogDebug($"Loading subOrganization for id: {subOrgNr}");
             
             var db = new WebAppDbContext();
             return db.Suborganizations
                 .Where(sub => sub.Suborgnr == subOrgNr)
-                .Include(sub => sub.BusinesscodeSuborgs)
+                .Include(sub => sub.BusinesscodeSuborg)
                 .ToList();
         }
     }

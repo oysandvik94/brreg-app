@@ -20,10 +20,10 @@ namespace webapp.Models
         public int Orgnr { get; set; }
 
         [ForeignKey(nameof(Businesscode))]
-        [InverseProperty("BusinesscodeOrgs")]
-        public virtual Businesscode BusinesscodeNavigation { get; set; }
+        [InverseProperty(nameof(Businesscodes.BusinesscodeOrg))]
+        public virtual Businesscodes BusinesscodeNavigation { get; set; }
         [ForeignKey(nameof(Orgnr))]
-        [InverseProperty(nameof(Organization.BusinesscodeOrgs))]
-        public virtual Organization OrgnrNavigation { get; set; }
+        [InverseProperty(nameof(Organizations.BusinesscodeOrg))]
+        public virtual Organizations OrgnrNavigation { get; set; }
     }
 }

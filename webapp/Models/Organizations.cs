@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 namespace webapp.Models
 {
     [Table("organizations")]
-    public partial class Organization
+    public partial class Organizations
     {
-        public Organization()
+        public Organizations()
         {
-            BusinesscodeOrgs = new HashSet<BusinesscodeOrg>();
-            Suborganizations = new HashSet<Suborganization>();
+            BusinesscodeOrg = new HashSet<BusinesscodeOrg>();
+            Suborganizations = new HashSet<Suborganizations>();
         }
 
         [Key]
@@ -79,9 +79,9 @@ namespace webapp.Models
         [StringLength(255)]
         public string Accountant { get; set; }
 
-        [InverseProperty(nameof(BusinesscodeOrg.OrgnrNavigation))]
-        public virtual ICollection<BusinesscodeOrg> BusinesscodeOrgs { get; set; }
-        [InverseProperty(nameof(Suborganization.ParentorgnrNavigation))]
-        public virtual ICollection<Suborganization> Suborganizations { get; set; }
+        [InverseProperty("OrgnrNavigation")]
+        public virtual ICollection<BusinesscodeOrg> BusinesscodeOrg { get; set; }
+        [InverseProperty("ParentorgnrNavigation")]
+        public virtual ICollection<Suborganizations> Suborganizations { get; set; }
     }
 }
