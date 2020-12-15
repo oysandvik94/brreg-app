@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using webapp.Models;
 
 namespace webapp
@@ -22,14 +23,23 @@ namespace webapp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
+            services.AddControllersWithViews()
+                // Avoids errors when resolving relationships in the DB for EF core
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
             
             // Add EF and Postgres services
-            services.AddEntityFrameworkNpgsql().AddDbContext<WebAppDbContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("WebAppDbContext")));
+            services.AddDbContext<WebAppDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("WebAppDbContext"))
+            );
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "brreg API", Version = "v1"});
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +56,14 @@ namespace webapp
                 app.UseHsts();
             }
 
+               
+            // Enable Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "brreg API V1");
+            });
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -54,9 +72,7 @@ namespace webapp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
 
             app.UseSpa(spa =>
