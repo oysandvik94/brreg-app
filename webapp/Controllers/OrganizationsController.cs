@@ -13,9 +13,11 @@ namespace webapp.Controllers
     public class OrganizationsController : ControllerBase
     {
         private readonly ILogger<OrganizationsController> _logger;
+        private readonly WebAppDbContext _context;
 
-        public OrganizationsController(ILogger<OrganizationsController> logger)
+        public OrganizationsController(WebAppDbContext context, ILogger<OrganizationsController> logger)
         {
+            _context = context;
             _logger = logger;
         }
         
@@ -24,8 +26,7 @@ namespace webapp.Controllers
         {
             _logger.LogDebug("Getting all organizations");
             
-            var db = new WebAppDbContext();
-            return db.Organizations
+            return _context.Organizations
                 .Include(org => org.BusinesscodeOrg)
                 .ToList(); ;
         }
@@ -35,8 +36,7 @@ namespace webapp.Controllers
         {
             _logger.LogDebug($"Getting organization for id {orgNr}");
             
-            var db = new WebAppDbContext();
-            return db.Organizations
+            return _context.Organizations
                 .Where(org => org.Orgnr == orgNr)
                 .Include(org => org.BusinesscodeOrg)
                 .ToList();

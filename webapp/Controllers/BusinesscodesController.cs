@@ -10,10 +10,12 @@ namespace webapp.Controllers
     [Route("[controller]")]
     public class BusinesscodesController : ControllerBase
     {
+        private readonly WebAppDbContext _context;
         private readonly ILogger<BusinesscodesController> _logger;
 
-        public BusinesscodesController(ILogger<BusinesscodesController> logger)
+        public BusinesscodesController(WebAppDbContext context, ILogger<BusinesscodesController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
@@ -22,8 +24,7 @@ namespace webapp.Controllers
         {
             _logger.LogDebug("Getting all businessCodes");
             
-            var db = new WebAppDbContext();
-            return db.Businesscodes
+            return _context.Businesscodes
                 .ToList();
         }
         
@@ -32,8 +33,7 @@ namespace webapp.Controllers
         {
             _logger.LogDebug($"Getting businessCode for id: {busCode}");
             
-            var db = new WebAppDbContext();
-            return db.Businesscodes
+            return _context.Businesscodes
                 .Where(busCode => busCode.Businesscode.Equals(busCode));
         }
     }

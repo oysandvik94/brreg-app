@@ -32,8 +32,8 @@ namespace webapp
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
             
             // Add EF and Postgres services
-            services.AddEntityFrameworkNpgsql().AddDbContext<WebAppDbContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("WebAppDbContext"))
+            services.AddDbContext<WebAppDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("WebAppDbContext"))
             );
 
             services.AddSwaggerGen(c =>
