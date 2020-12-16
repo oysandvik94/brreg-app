@@ -10,6 +10,12 @@ import Paper from '@material-ui/core/Paper';
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import * as PropTypes from "prop-types";
 import {stableSort} from "../utils/Sorting";
+import Collapse from "@material-ui/core/Collapse";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 const useStyles = makeStyles({
     table: {
@@ -25,14 +31,26 @@ const useStyles = makeStyles({
         position: 'absolute',
         top: 20,
         width: 1,
+    },
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
     }
 });
 
-// Headers and column definition
+// Headers and column definition for organizations
 const headCells = [
     { id: 'orgnr', numeric: true, label: 'Organisasjonsnummer' },
     { id: 'orgname', numeric: false, label: 'Navn/foretaksnavn' },
     { id: 'orgtype', numeric: false, label: 'Organisasjonsform' },
+    { id: 'municipality', numeric: false, label: 'Kommune' }
+];
+
+// Headers and column definition for subOrganizations
+const subOrgHeadCells = [
+    { id: 'suborgnr', numeric: true, label: 'Organisasjonsnummer' },
+    { id: 'suborgname', numeric: false, label: 'Navn/foretaksnavn' },
     { id: 'municipality', numeric: false, label: 'Kommune' }
 ];
 
@@ -68,7 +86,7 @@ export function OrganizationTable(props) {
     return (
        <TableContainer component={Paper}>
            <Table className={classes.table} aria-label="simple table">
-               <EnhancedTableHead
+               <SortableTableHeader
                    classes={classes}
                    order={order}
                    orderBy={orderBy}
@@ -78,18 +96,7 @@ export function OrganizationTable(props) {
                        {stableSort(data, order, orderBy)
                        .map((row) => {
                            return (
-                            <TableRow key={row.orgnr}>
-                               {headCells.map((cell) => (
-                                   <TableCell
-                                       key={cell.id}
-                                       component="th"
-                                       align={cell.numeric ? 'left' : 'right'}
-                                       scope="row"
-                                   >
-                                       {row[cell.id]}
-                                   </TableCell>
-                               ))}
-                            </TableRow>
+                               <Row key={row.orgnr} row={row} />
                            );
                        })}
                </TableBody>
@@ -99,7 +106,7 @@ export function OrganizationTable(props) {
 }
 
 // Custom header element for adding sorting
-function EnhancedTableHead(props) {
+function SortableTableHeader(props) {
     const { classes, order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
@@ -128,19 +135,89 @@ function EnhancedTableHead(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
+                <TableCell/> {/* Empty header cell for expand element */}
             </TableRow>
         </TableHead>
     );
 }
 
-EnhancedTableHead.propTypes = {
+SortableTableHeader.propTypes = {
     classes: PropTypes.object.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     order: PropTypes.oneOf(["asc", "desc"]).isRequired,
     orderBy: PropTypes.string.isRequired,
 };
 
+// Custom Row element for collapsible function
+function Row(props) {
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
+    const classes = useStyles();
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                {headCells.map((cell) => (
+                    <TableCell
+                        key={cell.id}
+                        component="th"
+                        align={cell.numeric ? 'left' : 'right'}
+                        scope="row"
+                    >
+                        {row[cell.id]}
+                    </TableCell>
+                ))}
+                <TableCell>
+                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Box margin={1}>
+                            <Typography variant="h6" gutterBottom component="div">
+                                Underenheter
+                            </Typography>
+                            <Table size="small" aria-label="purchases">
+                                <TableHead>
+                                    <TableRow>
+                                        {subOrgHeadCells.map((headCell) => (
+                                            <TableCell
+                                                key={headCell.id}
+                                                align={headCell.numeric ? 'left' : 'right'}
+                                            >
+                                                {headCell.label}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {row.suborganizations.map((subOrgRow) => (
+                                        <TableRow key={subOrgRow.suborgnr}>
+                                            {subOrgHeadCells.map((cell) => (
+                                                <TableCell
+                                                    key={cell.id}
+                                                    component="th"
+                                                    align={cell.numeric ? 'left' : 'right'}
+                                                    scope="row"
+                                                >
+                                                    {subOrgRow[cell.id]}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Box>
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    );
+}
+
 async function fetchData() {
-    const response = await fetch('organizations');
+    const response = await fetch('organizations?includeSubOrgs=true');
     return await response.json();
 }
