@@ -80,6 +80,9 @@ namespace webapp.Models
         [Column("accountant")]
         [StringLength(255)]
         public string Accountant { get; set; }
+        [Column("note")]
+        [StringLength(255)]
+        public string Note { get; set; }
 
         [InverseProperty("ParentorgnrNavigation")]
         public virtual ICollection<Suborganizations> Suborganizations { get; set; }
