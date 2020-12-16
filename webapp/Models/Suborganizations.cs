@@ -11,11 +11,6 @@ namespace webapp.Models
     [Table("suborganizations")]
     public partial class Suborganizations
     {
-        public Suborganizations()
-        {
-            BusinesscodeSuborg = new HashSet<BusinesscodeSuborg>();
-        }
-
         [Key]
         [Column("suborgnr")]
         public int Suborgnr { get; set; }
@@ -31,6 +26,9 @@ namespace webapp.Models
         [Column("municipality")]
         [StringLength(255)]
         public string Municipality { get; set; }
+        [Column("businesscodes")]
+        [StringLength(255)]
+        public string Businesscodes { get; set; }
         [Column("registerednotes")]
         [StringLength(255)]
         public string Registerednotes { get; set; }
@@ -40,7 +38,5 @@ namespace webapp.Models
         [ForeignKey(nameof(Parentorgnr))]
         [InverseProperty(nameof(Organizations.Suborganizations))]
         public virtual Organizations ParentorgnrNavigation { get; set; }
-        [InverseProperty("SuborgnrNavigation")]
-        public virtual ICollection<BusinesscodeSuborg> BusinesscodeSuborg { get; set; }
     }
 }

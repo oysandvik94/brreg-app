@@ -17,7 +17,8 @@ CREATE TABLE organizations (
     ceo varchar(255),
     objective varchar(255),
     businessType varchar(255),
-    sectorCode varchar(255),
+    businessCodes varchar(255),
+    sectorCodes varchar(255),
     registeredNotes varchar(255),
     board varchar(255),
     boardLeader varchar(255),
@@ -28,46 +29,20 @@ CREATE TABLE organizations (
     accountant varchar(255)
 );
 
-CREATE TABLE businessCodes (
-    businessCode varchar(255) PRIMARY KEY,
-    name varchar(255) UNIQUE NOT NULL
-);
-
 CREATE TABLE subOrganizations (
     subOrgNr int PRIMARY KEY,
     subOrgName varchar(255),
     locationAddress varchar(255),
     postAddress varchar(255),
     municipality varchar(255),
+    businessCodes varchar(255),
     registeredNotes varchar(255),
     parentOrgNr int,
     FOREIGN KEY (parentOrgNr)
         REFERENCES organizations (orgNr)
 );
 
-CREATE TABLE businessCode_org (
-    businessCode varchar(255) REFERENCES businessCodes(businessCode) ON UPDATE CASCADE,
-    orgNr int REFERENCES organizations(orgNr) ON UPDATE CASCADE,
-    CONSTRAINT businessCode_org_pkey PRIMARY KEY (businessCode, orgNr)
-);
-
-CREATE TABLE businessCode_subOrg (
-    businessCode varchar(255) REFERENCES businessCodes(businessCode) ON UPDATE CASCADE,
-    subOrgNr int REFERENCES subOrganizations(subOrgNr) ON UPDATE CASCADE,
-    CONSTRAINT businessCode_subOrg_pkey PRIMARY KEY (businessCode, subOrgNr)
-);
-
 -- Insert testdata 
-
-INSERT INTO businessCodes VALUES (
-    '93.120',
-    'Idrettslag og -klubber'
-);
-
-INSERT INTO businessCodes VALUES (
-    '68.209',
-    'Utleie av egen eller leid fast eiendom ellers'
-);
 
 INSERT INTO organizations VALUES (
     871023832,
@@ -83,6 +58,7 @@ INSERT INTO organizations VALUES (
     'John Harald Log',
     null,
     'Fotball',
+    '93.120 Idrettslag og -klubber',
     '7000 Ideelle organisasjoner',
     'Registrert i Merverdiavgiftsregisteret
 Frivillig registrering i Merverdiavgiftsregisteret:
@@ -118,6 +94,7 @@ INSERT INTO organizations VALUES (
     'Bjørn Tjaum',
     'Eie og forvalte fast eiendom, samt å drive handel,  tjenesteytende virksomhet og produksjon og alt hva  hermed står i forbindelse, herunder å delta i  andre foretagender som driver tilsvarende virksom-  het.',
     'Eie og forvalte fast eiendom, samt å drive handel,  tjenesteytende virksomhet og produksjon og alt hva  hermed står i forbindelse, herunder å delta i  andre foretagender som driver tilsvarende virksom-  het.',
+    '68.209 Utleie av egen eller leid fast eiendom ellers',
     '2100 Private aksjeselskaper mv.',
     'Registrert i Foretaksregisteret
 Registrert i Merverdiavgiftsregisteret
@@ -146,6 +123,7 @@ INSERT INTO subOrganizations VALUES (
 5522  HAUGESUND',
     null,
     'HAUGESUND',
+    '93.120 Idrettslag og -klubber',
     'Registrert i NAV Aa-registeret',
     871023832
 );
@@ -158,27 +136,7 @@ INSERT INTO subOrganizations VALUES (
     'Postboks 1593 Vika
 0118 OSLO',
     'OSLO',
+    '68.209 Utleie av egen eller leid fast eiendom ellers',
      null,
      945725729
-);
-
-
-INSERT INTO businessCode_org VALUES(
-    '93.120',
-    871023832
-);
-
-INSERT INTO businessCode_org VALUES(
-    '68.209',
-    945725729
-);
-
-INSERT INTO businessCode_subOrg VALUES(
-    '93.120',
-    972370134
-);
-
-INSERT INTO businessCode_subOrg VALUES(
-   '68.209',
-    983314635
 );

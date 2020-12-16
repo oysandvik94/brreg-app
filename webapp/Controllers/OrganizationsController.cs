@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,36 +10,35 @@ namespace webapp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class OrganizationsController : ControllerBase
+    public class OrganizationsController : BaseController
     {
-        private readonly ILogger<OrganizationsController> _logger;
-        private readonly WebAppDbContext _context;
-
-        public OrganizationsController(WebAppDbContext context, ILogger<OrganizationsController> logger)
+        public OrganizationsController(WebAppDbContext context, ILogger<OrganizationsController> logger) : base(context, logger)
         {
-            _context = context;
-            _logger = logger;
         }
         
         [HttpGet]
-        public IEnumerable<Organizations> Get()
+        public async Task<List<Organizations>> Get([FromQuery(Name = "includeSubOrgs")] bool includeSubOrgs)
         {
             _logger.LogDebug("Getting all organizations");
-            
-            return _context.Organizations
-                .Include(org => org.BusinesscodeOrg)
-                .ToList(); ;
+
+            return await getQueryable(includeSubOrgs).ToListAsync(); ;
         }
         
         [HttpGet("{orgNr:int}")]
-        public IEnumerable<Organizations> Get(int orgNr)
+        public async Task<IEnumerable<Organizations>> Get([FromQuery(Name = "includeSubOrgs")] bool includeSubOrgs, int orgNr)
         {
             _logger.LogDebug($"Getting organization for id {orgNr}");
             
-            return _context.Organizations
-                .Where(org => org.Orgnr == orgNr)
-                .Include(org => org.BusinesscodeOrg)
-                .ToList();
+            return await getQueryable(includeSubOrgs).Where(org => org.Orgnr == orgNr).ToListAsync();
+        }
+
+        /**
+         * Common logic for every Organizations query
+         */
+        private IQueryable<Organizations> getQueryable(bool includeSubOrgs)
+        {
+            var orgs = _context.Organizations.AsQueryable();
+            return includeSubOrgs ? orgs.Include(org => org.Suborganizations) : orgs;
         }
     }
 }
