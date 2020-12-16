@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,6 @@ namespace webapp.Controllers
             _logger.LogDebug("Getting all organizations");
             
             return _context.Organizations
-                .Include(org => org.BusinesscodeOrg)
                 .ToList(); ;
         }
         
@@ -38,7 +38,6 @@ namespace webapp.Controllers
             
             return _context.Organizations
                 .Where(org => org.Orgnr == orgNr)
-                .Include(org => org.BusinesscodeOrg)
                 .ToList();
         }
     }

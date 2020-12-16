@@ -36,7 +36,6 @@ namespace webapp.Controllers
             
             return _context.Suborganizations
                 .Where(sub => sub.Suborgnr == subOrgNr)
-                .Include(sub => sub.BusinesscodeSuborg)
                 .ToList();
         }
     }
