@@ -25,11 +25,18 @@ namespace webapp.Controllers
         }
         
         [HttpGet("{orgNr:int}")]
-        public async Task<IEnumerable<Organizations>> Get([FromQuery(Name = "includeSubOrgs")] bool includeSubOrgs, int orgNr)
+        public async Task<IActionResult> Get([FromQuery(Name = "includeSubOrgs")] bool includeSubOrgs, int orgNr)
         {
             _logger.LogDebug($"Getting organization for id {orgNr}");
             
-            return await getQueryable(includeSubOrgs).Where(org => org.Orgnr == orgNr).ToListAsync();
+            var result =  await getQueryable(includeSubOrgs).Where(org => org.Orgnr == orgNr).ToListAsync();
+
+            if (!result.Any())
+            {
+                return NotFound($"Foretak med orgNr {orgNr} ble ikke funnet");
+            }
+            
+            return Ok(result);
         }
 
         /**

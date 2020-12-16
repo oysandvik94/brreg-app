@@ -26,13 +26,20 @@ namespace webapp.Controllers
         }
         
         [HttpGet("{subOrgNr:int}")]
-        public async Task<IEnumerable<Suborganizations>> Get(int subOrgNr)
+        public async Task<IActionResult> Get(int subOrgNr)
         {
             _logger.LogDebug($"Loading subOrganization for id: {subOrgNr}");
             
-            return await _context.Suborganizations
+            var result =  await _context.Suborganizations
                 .Where(sub => sub.Suborgnr == subOrgNr)
                 .ToListAsync();
+
+            if (!result.Any())
+            {
+                return NotFound($"Underforetak med orgNr {subOrgNr} ble ikke funnet");
+            }
+            
+            return Ok(result);
         }
     }
 }

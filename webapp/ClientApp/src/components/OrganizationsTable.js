@@ -135,7 +135,7 @@ function SortableTableHeader(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                <TableCell/> {/* Empty header cell for expand element */}
+                <TableCell/>{/* Empty header cell for expand element */}
             </TableRow>
         </TableHead>
     );

@@ -26,7 +26,8 @@ CREATE TABLE organizations (
     boardMembers varchar(255),
     signature varchar(255),
     auditor varchar(255),
-    accountant varchar(255)
+    accountant varchar(255),
+    note varchar(255)
 );
 
 CREATE TABLE subOrganizations (
@@ -76,6 +77,7 @@ Trygve Nygaard',
     'Daglig leder alene.
 Styrets leder alene.',
     null,
+    null,
     null
 );
 
@@ -113,7 +115,8 @@ Bjørn Tjaum',
 Organisasjonsnummer 980 211 282
 DELOITTE AS
 Dronning Eufemias gate 14
-0191   OSLO'
+0191   OSLO',
+    null
 );
 
 INSERT INTO subOrganizations VALUES (
