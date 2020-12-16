@@ -13,7 +13,6 @@ namespace webapp.Models
     {
         public Organizations()
         {
-            BusinesscodeOrg = new HashSet<BusinesscodeOrg>();
             Suborganizations = new HashSet<Suborganizations>();
         }
 
@@ -51,9 +50,12 @@ namespace webapp.Models
         [Column("businesstype")]
         [StringLength(255)]
         public string Businesstype { get; set; }
-        [Column("sectorcode")]
+        [Column("businesscodes")]
         [StringLength(255)]
-        public string Sectorcode { get; set; }
+        public string Businesscodes { get; set; }
+        [Column("sectorcodes")]
+        [StringLength(255)]
+        public string Sectorcodes { get; set; }
         [Column("registerednotes")]
         [StringLength(255)]
         public string Registerednotes { get; set; }
@@ -79,8 +81,6 @@ namespace webapp.Models
         [StringLength(255)]
         public string Accountant { get; set; }
 
-        [InverseProperty("OrgnrNavigation")]
-        public virtual ICollection<BusinesscodeOrg> BusinesscodeOrg { get; set; }
         [InverseProperty("ParentorgnrNavigation")]
         public virtual ICollection<Suborganizations> Suborganizations { get; set; }
     }
