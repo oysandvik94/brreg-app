@@ -17,6 +17,12 @@ import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import AddForm from "./AddForm";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import {CommentOutlined} from "@material-ui/icons";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles({
     table: {
@@ -45,7 +51,8 @@ const headCells = [
     { id: 'orgnr', numeric: true, label: 'Organisasjonsnummer' },
     { id: 'orgname', numeric: false, label: 'Navn/foretaksnavn' },
     { id: 'orgtype', numeric: false, label: 'Organisasjonsform' },
-    { id: 'municipality', numeric: false, label: 'Kommune' }
+    { id: 'municipality', numeric: false, label: 'Kommune' },
+    { id: 'note', numeric: false, popup: true, label: 'Notat' }
 ];
 
 // Headers and column definition for subOrganizations
@@ -158,10 +165,51 @@ SortableTableHeader.propTypes = {
     orderBy: PropTypes.string.isRequired,
 };
 
+const DialogButton = ({ setOpenNotes, openNotes, valueNotes}) => (
+    <div>
+        <IconButton 
+            aria-label="expand row" 
+            size="small"
+            variant="outlined"
+            color="primary"
+            onClick={e => {
+                e.stopPropagation();
+                setOpenNotes(true);
+            }}
+            hidden={!valueNotes}
+        >
+            <CommentOutlined />
+        </IconButton>
+        <Dialog
+            open={openNotes}
+            onClose={() => setOpenNotes(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            maxWidth="sm"
+            fullWidth
+        >
+            <DialogTitle >
+                Notat
+            </DialogTitle>
+            <DialogContent dividers>
+                <div style={{whiteSpace: 'pre-line'}}>
+                    {valueNotes}
+                </div>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setOpenNotes(false)} color="primary">
+                    Lukk
+                </Button>
+            </DialogActions>
+        </Dialog>
+    </div>
+);
+
 // Custom Row element for collapsible function
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
+    const [openNotes, setOpenNotes] = React.useState(false);
     const classes = useStyles();
     return (
         <React.Fragment>
@@ -173,7 +221,14 @@ function Row(props) {
                         align={cell.numeric ? 'left' : 'right'}
                         scope="row"
                     >
-                        {row[cell.id]}
+                        {/* Open popup if notes, else show plaintext */}
+                        {!cell.popup ? row[cell.id] : (
+                            <DialogButton
+                                openNotes={openNotes}
+                                setOpenNotes={setOpenNotes}
+                                valueNotes={row[cell.id]}
+                            />
+                        )}
                     </TableCell>
                 ))}
                 <TableCell>
