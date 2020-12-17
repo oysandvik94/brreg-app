@@ -7,23 +7,32 @@ https://data.brreg.no/enhetsregisteret/api/docs/index.html
 
 ## Requirements
 
-Docker
+Kjøre via docker:
 
-## Quick start
+* Docker
+* docker-compose
+
+Uten app uten docker:
+
+* .NET Framework 5.0
+* Node.js V15.0.0
+
+## Kjøre instrukser
+
+### Docker (anbefalt)
 
 Naviger til docker-compose
 
 Kjør:
 `docker-compose up -p`
 
-## Bygg selv
-Krever .NET Framework 5.0
+### Bygg selv
 
 Pull DB:
 `docker pull oysandvik94/brreg-db:latest`
 
 Kjør DB:
-`docker run -d --name brreg-db -p 5555:5432 brreg-postgres-db`
+`docker run -d --name oysandvik94/brreg-db -p 5555:5432 brreg-db`
 
 Naviger til `webapp`
 
