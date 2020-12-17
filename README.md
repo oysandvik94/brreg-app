@@ -26,6 +26,9 @@ Naviger til docker-compose
 Kjør:
 `docker-compose up -p`
 
+Applikasjonen er tilgjengelig på:
+http://localhost:8000
+
 ### Bygg selv
 
 Pull DB:
@@ -38,6 +41,9 @@ Naviger til `webapp`
 
 Kjør app:
 `dotnet run --launch-profile Production`
+
+Applikasjonen er tilgjengelig på:
+https://localhost:5001
 
 ## Generate Model files
 From WebApp folder:
