@@ -61,7 +61,7 @@ namespace webapp.Controllers
 
                     if (subOrgs != null)
                     {
-                        org = addSubOrgs(org, subOrgs);
+                        org = Organizations.AddSubOrgsFromJson(org, subOrgs);
                     }
                 }
             }
@@ -79,22 +79,6 @@ namespace webapp.Controllers
         {
             var orgs = _context.Organizations.AsQueryable();
             return includeSubOrgs ? orgs.Include(org => org.Suborganizations) : orgs;
-        }
-
-        private static Organizations addSubOrgs(Organizations org, IEnumerable<JToken> subOrgs)
-        {
-            foreach (var subOrgToken in subOrgs)
-                
-            {
-                var subOrg = new Suborganizations();
-                subOrg.Suborgnr = subOrgToken.SelectToken("organisasjonsnummer").Value<int>();
-                subOrg.Suborgname = subOrgToken.SelectToken("navn").Value<string>();
-                subOrg.Municipality = subOrgToken.SelectToken("$.beliggenhetsadresse.kommune").Value<string>();
-                
-                org.Suborganizations.Add(subOrg);
-            }
-
-            return org;
         }
     }
 }
