@@ -14,7 +14,7 @@ namespace webapp.Controllers
     [Route("[controller]")]
     public class QueryBrregController : BaseController
     {
-        private const string BrregApiUri = "https://data.brreg.no/enhetsregisteret/api";
+        internal const string BrregApiUri = "https://data.brreg.no/enhetsregisteret/api";
         
         public QueryBrregController(WebAppDbContext context, ILogger<OrganizationsController> logger) : base(context, logger)
         {

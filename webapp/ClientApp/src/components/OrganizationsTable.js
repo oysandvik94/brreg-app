@@ -16,6 +16,7 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import AddForm from "./AddForm";
 
 const useStyles = makeStyles({
     table: {
@@ -59,6 +60,7 @@ export function OrganizationTable(props) {
     const [data, setData] = useState([]);
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("orgnr");
+    const [loading, setLoading] = React.useState(false);
     const classes = useStyles();
 
     const handleRequestSort = (event, property) => {
@@ -69,14 +71,21 @@ export function OrganizationTable(props) {
     
     // Fetch data async
     useEffect(() => {
+        setLoading(true);
         fetchData()
             .then(d => {
-                setData(d)
+                setData(d);
+                setLoading(false);
             });
     }, [])
     
-    // TODO: Make loading screen
-    if (data === undefined || data.length === 0) {
+    const handleSave = async () => {
+        await fetchData().then( d => {
+            setData(d);
+        });
+    }
+    
+    if (loading) {
         return (
             <p><em>Laster inn...</em></p>        
         );
@@ -85,6 +94,7 @@ export function OrganizationTable(props) {
     // Data has been fetched, render table
     return (
        <TableContainer component={Paper}>
+           <AddForm onSave={handleSave} />
            <Table className={classes.table} aria-label="simple table">
                <SortableTableHeader
                    classes={classes}

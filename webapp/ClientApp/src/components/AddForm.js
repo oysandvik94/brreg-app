@@ -8,7 +8,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AsyncSelect from 'react-select/async';
 import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import grey from "@material-ui/core/colors/grey";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from '@material-ui/lab/Alert';
+import {OrganizationTable} from "./OrganizationsTable";
+import * as PropTypes from "prop-types";
 
 const useStyles = makeStyles({
     dialog: {
@@ -26,20 +29,38 @@ const useStyles = makeStyles({
     }
 });
 
-export default function AddForm() {
+export default function AddForm(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [inputValue, setValue] = React.useState('');
     const [selectedValue, setSelectedValue] = React.useState(null);
+    const [statusMessage, setStatusMessage] = React.useState('');
+    const [showSnackbar, setShowSnackbar] = React.useState(false);
+    const [snackType, setSnackType] = React.useState('');
+    // Form values
+    const [formOrgName, setFormOrgName] = React.useState('');
+    const [formOrgnr, setFormOrgnr] = React.useState('');
+    const [formOrgType, setFormOrgType] = React.useState('');
+    const [formMunicipality, setFormMunicipality] = React.useState('');
+    const [customNote, setCustomNote] = React.useState('');
+    
     
     // handle input change event
     const handleInputChange = value => {
         setValue(value);
     };
 
-    // handle selection
+    /**
+     * Handles brreg search selection. 
+     * Set value and update form
+     * @param value JSON res from brreg query
+     */
     const handleChange = value => {
         setSelectedValue(value);
+        setFormOrgName(value["navn"]);
+        setFormOrgnr(value["organisasjonsnummer"]);
+        setFormOrgType(value["organisasjonsform"]["beskrivelse"]);
+        setFormMunicipality(value["forretningsadresse"]["kommune"]);
     }
 
     // load options using API call
@@ -55,13 +76,57 @@ export default function AddForm() {
         setOpen(false);
     };
 
+    const handleCloseSnackbar = (event, reason) => {
+        setShowSnackbar(false);
+    };
+    
+    const handleCreateStatus = (status) => {
+        if (status === 201) {
+            setStatusMessage("Ny organisasjon opprettet");
+            setSnackType("success");
+        } else {
+            setStatusMessage("Kunne ikke opprette ny organisasjon");
+            setSnackType("error");
+        }
+        setShowSnackbar(true);
+        props.onSave();
+    }
+
+   function handleTextFieldChange(e) {
+        setCustomNote(e.target.value);
+    }
+
     const saveOrg = () => {
         setOpen(false);
-        // TODO: Lagre
+        
+        if (!formOrgnr) {
+            return;
+        }
+        
+        // Map form to organization model
+        let organization={
+            orgname:formOrgName,
+            orgnr:formOrgnr,
+            municipality:formMunicipality,
+            orgtype:formOrgType,
+            note:customNote
+        };
+        
+        fetch('organizations',{
+            method: 'POST',
+            headers:{'Content-type':'application/json-patch+json'},
+            body: JSON.stringify(organization)
+        }).then(r =>
+            handleCreateStatus(r.status)
+        );
     };
 
     return (
         <div>
+            <Snackbar open={showSnackbar} autoHideDuration={2000} onClose={handleCloseSnackbar}>
+                <Alert severity={snackType}>{statusMessage}</Alert>
+            </Snackbar>
+            
             <Button variant="contained" color="secondary" onClick={handleClickOpen}>
                 Søk og lagre
             </Button>
@@ -84,30 +149,30 @@ export default function AddForm() {
                         }}
                     />
                     <form className={classes.root} noValidate autoComplete="off">
-                        <Container className={classes.formContainer} hidden={selectedValue === null}>
+                        <Container className={classes.formContainer} >
                             <TextField
                                 id="orgname"
                                 label="Navn"
-                                value={selectedValue !== null ? selectedValue["navn"] : ''}
-                                aria-readonly={true}
+                                value={formOrgName}
+                                onChange={(e) => setFormOrgName(e.target.value)}
                             />
                             <TextField
                                 id="orgnr"
                                 label="Organisasjonsnummer"
-                                value={selectedValue !== null ? selectedValue["organisasjonsnummer"] : ''}
-                                aria-readonly={true}
+                                value={formOrgnr}
+                                onChange={(e) => setFormOrgnr(e.target.value)}
                             />
                             <TextField
                                 id="orgtype"
                                 label="Organisasjonform"
-                                aria-readonly={true}
-                                value={selectedValue !== null ? selectedValue["organisasjonsform"]["beskrivelse"] : ''}
+                                value={formOrgType}
+                                onChange={(e) => setFormOrgType(e.target.value)}
                             />
                             <TextField
                                 id="municipality"
                                 label="Kommune"
-                                value={selectedValue !== null ? selectedValue["forretningsadresse"]["kommune"] : ''}
-                                aria-readonly={"true"}
+                                value={formMunicipality}
+                                onChange={(e) => setFormMunicipality(e.target.value)}
                             />
                             <TextField
                                 id="note"
@@ -115,6 +180,8 @@ export default function AddForm() {
                                 multiline={true}
                                 fullWidth
                                 variant="outlined"
+                                value={customNote}
+                                onChange={handleTextFieldChange}
                             />
                         </Container>
                     </form>
@@ -132,12 +199,6 @@ export default function AddForm() {
     );
 }
 
-async function fetchData(data) {
-    // Avoid doing unnecessary searches with just a few letters
-    if (data !== undefined || data.length < 3) {
-        return {};
-    }
-    
-/*    const response = await fetch('QueryBrreg/' + data);
-    return await response.json();*/
-}
+AddForm.propTypes = {
+    onSave: PropTypes.func
+};
