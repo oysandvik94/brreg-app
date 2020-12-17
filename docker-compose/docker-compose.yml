@@ -1,0 +1,13 @@
+version: "2"
+services:
+    web:
+        image: oysandvik94/brreg-app:latest
+        ports:
+            - "8000:80"
+        environment:
+                ConnectionStrings__WebAppDbContext: "Host=db;Database=brregdb;Username=postgres;Password=postgres;Port=5432"
+
+    db:
+        image: oysandvik94/brreg-db:latest
+        ports:
+            - "5555:5432"
