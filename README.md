@@ -24,7 +24,7 @@ Uten app uten docker:
 Naviger til docker-compose
 
 Kjør:
-`docker-compose up -p`
+`docker-compose up`
 
 Applikasjonen er tilgjengelig på:
 http://localhost:8000
