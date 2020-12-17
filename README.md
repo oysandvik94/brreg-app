@@ -32,7 +32,7 @@ Pull DB:
 `docker pull oysandvik94/brreg-db:latest`
 
 Kjør DB:
-`docker run -d --name oysandvik94/brreg-db -p 5555:5432 brreg-db`
+`docker run -d --name brreg-db -p 5555:5432 oysandvik94/brreg-db`
 
 Naviger til `webapp`
 
