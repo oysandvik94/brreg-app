@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+    web:
+        image: oysandvik94/brreg-app:latest
+        ports:
+            - "8000:80"
+
+    db:
+        image: oysandvik94/brreg-db:latest
+        ports:
+            - "5555:5432"
