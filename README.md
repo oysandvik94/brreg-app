@@ -17,7 +17,7 @@ Uten app uten docker:
 * .NET Framework 5.0
 * Node.js V15.0.0
 
-## Kjøre instrukser
+## Kjøreinstrukser
 
 ### Docker (anbefalt)
 
