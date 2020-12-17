@@ -10,7 +10,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from '@material-ui/lab/Alert';
-import {OrganizationTable} from "./OrganizationsTable";
 import * as PropTypes from "prop-types";
 
 const useStyles = makeStyles({
@@ -32,11 +31,14 @@ const useStyles = makeStyles({
 export default function AddForm(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [inputValue, setValue] = React.useState('');
+    const [, setValue] = React.useState('');
     const [selectedValue, setSelectedValue] = React.useState(null);
+    
+    // Variables for client-side notification messages
     const [statusMessage, setStatusMessage] = React.useState('');
     const [showSnackbar, setShowSnackbar] = React.useState(false);
     const [snackType, setSnackType] = React.useState('');
+    
     // Form values
     const [formOrgName, setFormOrgName] = React.useState('');
     const [formOrgnr, setFormOrgnr] = React.useState('');
@@ -68,11 +70,11 @@ export default function AddForm(props) {
         return fetch(`QueryBrreg/${inputValue}`).then(res => res.json());
     };
 
-    const handleClickOpen = () => {
+    const handleClickOpenAddForm = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleCloseAddForm = () => {
         setOpen(false);
     };
 
@@ -127,10 +129,10 @@ export default function AddForm(props) {
                 <Alert severity={snackType}>{statusMessage}</Alert>
             </Snackbar>
             
-            <Button variant="contained" color="secondary" onClick={handleClickOpen}>
+            <Button variant="contained" color="secondary" onClick={handleClickOpenAddForm}>
                 Søk og lagre
             </Button>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={open} onClose={handleCloseAddForm} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Ny organisasjon</DialogTitle>
                 <DialogContent className={classes.dialog}>
                     <AsyncSelect
@@ -187,7 +189,7 @@ export default function AddForm(props) {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleCloseAddForm} color="primary">
                         Avbryt
                     </Button>
                     <Button onClick={saveOrg} color="primary">
