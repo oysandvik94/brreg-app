@@ -3,7 +3,9 @@
 Webapplikasjon bygget på .NET Framework, React.js og PostgreSQL.
 Applikasjonen lagrer informasjon om en bedrift. Applikasjonen kan hente informasjon fra Brønnøysregisteret for å lagre nye bedrifter.
 
+Informasjon hentet fra:
 https://data.brreg.no/enhetsregisteret/api/docs/index.html
+https://data.norge.no/dataservices/4dabc5ea-b57b-3b68-9e48-2ff993be3f6e
 
 ## Requirements
 
@@ -25,6 +27,8 @@ Naviger til docker-compose
 
 Kjør:
 `docker-compose up`
+
+Compose filen bygger imagene selv, dette kan ta noen minutter. 
 
 Applikasjonen er tilgjengelig på:
 http://localhost:8000
