@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,12 @@ namespace webapp.Controllers
             _logger.LogDebug($"Querying finances for organization with orgNr: {orgNr}");
 
             var jToken = await QueryThirdPartiApi($"{BrregFinancesUri}/regnskap?orgNummer={orgNr}");
+            
+            if (!jToken.Any())
+            {
+                return NotFound($"Could not find financial information for orgnr: {orgNr}");
+            }
+
             return Ok(jToken.First.SelectToken("$.egenkapitalGjeld"));
         }
     }
