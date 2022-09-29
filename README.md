@@ -5,6 +5,7 @@ Applikasjonen lagrer informasjon om en bedrift. Applikasjonen kan hente informas
 
 Informasjon hentet fra:
 
+
 https://data.brreg.no/enhetsregisteret/api/docs/index.html
 
 https://data.norge.no/dataservices/4dabc5ea-b57b-3b68-9e48-2ff993be3f6e
