@@ -5,6 +5,7 @@ Applikasjonen lagrer informasjon om en bedrift. Applikasjonen kan hente informas
 
 Informasjon hentet fra:
 
+
 https://data.brreg.no/enhetsregisteret/api/docs/index.html
 
 https://data.norge.no/dataservices/4dabc5ea-b57b-3b68-9e48-2ff993be3f6e
@@ -55,3 +56,5 @@ https://localhost:5001
 From WebApp folder:
 
 `dotnet ef dbcontext scaffold "Host=localhost;Database=$DB_NAME;Username=$DB_USERNAME;Password=$DB_PASSWORD;Port=$DB_PORT" Npgsql.EntityFrameworkCore.PostgreSQL -o Models --force --data-annotations --context WebAppDbContext --no-pluralize`
+
+Test
